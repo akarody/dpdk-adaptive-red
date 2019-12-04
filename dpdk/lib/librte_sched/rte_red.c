@@ -127,10 +127,4 @@ rte_red_config_init(struct rte_red_config *red_cfg,
 
 	return 0;
 }
-int 
-rte_ared_init(struct rte_ared *ared,struct rte_red_config *red_cfg, struct rte_red *red)
-{
-	ared->red=red;
-	ared->red_cfg=red_cfg;
 
-}
