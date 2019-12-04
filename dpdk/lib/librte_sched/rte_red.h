@@ -94,41 +94,7 @@ struct rte_red {
  */
 
 	
-void rte_timer_init	(struct rte_timer * tim	)	
-void adaptive_red_timer(struct rte_ared *ared,struct rte_timer *tim)
-{
 
-int lcore_id = rte_lcore_id();
-    uint64_t hz = rte_get_timer_hz();
-    uint64_t ticks;
-    
-     ticks=hz*2;
-
-    rte_timer_reset_sync(tim,
-            ticks,
-            PERIODICAL,
-            lcore_id,
-            adaptive_red,
-            ared);
-
-
-
-}
-void adaptive_red(struct rte_ared *ared)
-{
-
-if(red->avg<target&&((1/red_cfg->maxp_inv)>=0.01))
-{
-red_cfg->maxp_inv = (red_cfg->maxp_inv*10)/9;
-
-}
-else if(red->avg>target&&((1/red_cfg->maxp_inv)<=0.5))
-{
-red_cfg->maxp_inv = (red_cfg->maxp_inv*(red_cfg->alpha_inv*(red_cfg->red_inv_pmax)))/(red_cfg->red_inv_pmax+(red_cfg->alpha_inv*(red_cfg->red_inv_pmax)));
-
-}
-
-}	
 
 	
 	
