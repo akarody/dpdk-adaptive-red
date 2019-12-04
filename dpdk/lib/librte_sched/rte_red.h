@@ -22,6 +22,7 @@ extern "C" {
 #include <rte_debug.h>
 #include <rte_cycles.h>
 #include <rte_branch_prediction.h>
+#include<rte_timer.h>
 
 #define RTE_RED_SCALING                     10         /**< Fraction size for fixed-point */
 #define RTE_RED_S                           (1 << 22)  /**< Packet size multiplied by number of leaf queues */
@@ -63,6 +64,8 @@ struct rte_red_config {
 	uint32_t pa_const; /**< Precomputed constant value used for pa calculation (scaled in fixed-point format) */
 	uint8_t maxp_inv;  /**< maxp_inv */
 	uint8_t wq_log2;   /**< wq_log2 */
+	uint8_t target;    /**< ared target value */
+	uint8_t alpha_inv;     /**< ared constant */
 };
 
 /**
@@ -72,6 +75,12 @@ struct rte_red {
 	uint32_t avg;      /**< Average queue size (avg), scaled in fixed-point format */
 	uint32_t count;    /**< Number of packets since last marked packet (count) */
 	uint64_t q_time;   /**< Start of the queue idle time (q_time) */
+};
+	
+	struct rte_ared{
+
+	struct rte_red *red;
+	struct rte_red_config *red_cfg;
 };
 
 /**
@@ -83,6 +92,25 @@ struct rte_red {
  * @retval 0 success
  * @retval !0 error
  */
+
+void adaptive_red(struct rte_ared *ared)
+{
+
+if(red->avg<target&&((1/red_cfg->maxp_inv)>=0.01))
+{
+red_cfg->maxp_inv = (red_cfg->maxp_inv*10)/9;
+
+}
+else if(red->avg>target&&((1/red_cfg->maxp_inv)<=0.5))
+{
+red_cfg->maxp_inv = (red_cfg->maxp_inv*(red_cfg->alpha_inv*(red_cfg->red_inv_pmax)))/(red_cfg->red_inv_pmax+(red_cfg->alpha_inv*(red_cfg->red_inv_pmax)));
+
+}
+
+}	
+
+	
+	
 int
 rte_red_rt_data_init(struct rte_red *red);
 
