@@ -93,6 +93,27 @@ struct rte_red {
  * @retval !0 error
  */
 
+	
+void rte_timer_init	(struct rte_timer * tim	)	
+void adaptive_red_timer(struct rte_ared *ared,struct rte_timer *tim)
+{
+
+int lcore_id = rte_lcore_id();
+    uint64_t hz = rte_get_timer_hz();
+    uint64_t ticks;
+    
+     ticks=hz*2;
+
+    rte_timer_reset_sync(tim,
+            ticks,
+            PERIODICAL,
+            lcore_id,
+            adaptive_red,
+            ared);
+
+
+
+}
 void adaptive_red(struct rte_ared *ared)
 {
 
